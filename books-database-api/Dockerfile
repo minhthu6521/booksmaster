@@ -1,0 +1,5 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
+COPY . /app
+
+ENV ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-localhost}
+ENV ELASTIC_SEARCH_PORT=${ELASTIC_SEARCH_PORT:-9201}

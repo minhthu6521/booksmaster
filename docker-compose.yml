@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+   books-ui:
+      container_name: books-ui
+      build:
+         context: ./books-ui
+         dockerfile: Dockerfile
+      tty: true
+      ports:
+         - "3000:3000"
+      volumes:
+         - ./books-ui:/app
+         - /app/node_modules
+      networks:
+         - books-network
+   database-api:
+      build:
+         context: ./books-database-api
+         dockerfile: Dockerfile
+      container_name: databast-api
+      environment:
+         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-localhost}
+         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9201}
+      depends_on:
+         -  books-elastics-db
+      ports:
+         - "8001:80"
+      networks:
+         - books-network
+   books-elastics-db:
+      environment:
+         - discovery.type=single-node
+      container_name: books-elastics-db
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+      ports:
+         - "9201:9200"
+         - "9301:9300"
+      volumes:
+         -  books_elastic_db:/usr/share/elasticsearch/data
+      networks:
+         - books-network
+networks:
+   books-network:
+      driver: bridge
+
+volumes:
+   books_elastic_db:
+      driver: local
