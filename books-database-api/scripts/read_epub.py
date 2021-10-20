@@ -28,12 +28,13 @@ def epubtohtml(path):
     description = html2text(read_metadata('DC', 'description'))
     chapters = [item.get_content() for item in book.get_items() if item.get_type() == ITEM_DOCUMENT]
     content = [html2text(chapter) for chapter in chapters]
+    content_text = "\n".join(content)
     return {
         "title": title,
         "author": author,
         "isbn": isbn,
         "description": description,
-        "content": content
+        "content": content_text,
     }
 
 
