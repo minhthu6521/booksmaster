@@ -17,7 +17,7 @@ services:
       build:
          context: books_database_api
          dockerfile: Dockerfile
-      container_name: databast-api
+      container_name: database-api
       environment:
          ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-localhost}
          ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9201}
@@ -39,6 +39,40 @@ services:
          -  books_elastic_db:/usr/share/elasticsearch/data
       networks:
          - books-network
+   books-postgres-db:
+      container_name: books-postgres-db
+      build:
+         context: books_backend
+         dockerfile: Dockerfile.db
+      environment:
+         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+         POSTGRES_USER:  ${POSTGRES_USER:-test}
+      ports:
+         -  "5432:5432"
+      networks:
+         - books-network
+      volumes:
+         -  books_postgres_db:/var/lib/postgresql/data
+   backend-api:
+      build:
+         context: books_backend
+         dockerfile: Dockerfile
+      container_name: backend-api
+      environment:
+         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-localhost}
+         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9201}
+         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+         POSTGRES_USER: ${POSTGRES_USER:-test}
+         POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+         POSTGRES_URL: ${POSTGRES_URL:-books-postgres-db}
+         POSTGRES_DATABASE: ${POSTGRES_DATABASE:-books}
+      depends_on:
+         - database-api
+         - books-postgres-db
+      ports:
+         - "8002:80"
+      networks:
+         - books-network
 networks:
    books-network:
       driver: bridge
@@ -46,3 +80,4 @@ networks:
 volumes:
    books_elastic_db:
       driver: local
+   books_postgres_db: {}
