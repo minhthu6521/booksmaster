@@ -15,7 +15,7 @@ services:
          - books-network
    database-api:
       build:
-         context: ./books-database-api
+         context: books_database_api
          dockerfile: Dockerfile
       container_name: databast-api
       environment:
