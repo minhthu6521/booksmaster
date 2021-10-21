@@ -73,6 +73,8 @@ services:
          - "8002:80"
       networks:
          - books-network
+      volumes:
+         -  ./books_backend:/app
 networks:
    books-network:
       driver: bridge

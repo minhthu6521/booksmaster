@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from books_backend.database import Base
+from database import Base
 
 
 class BookORM(Base):
@@ -16,12 +16,11 @@ class BookORM(Base):
     isbn = Column(String)
     language = Column(String(5))
 
-    class Config:
-        orm_mode = True
-
 
 class Book(BaseModel):
     id: int
     title: str
     isbn: Optional[str] = None
 
+    class Config:
+        orm_mode = True

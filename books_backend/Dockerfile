@@ -13,3 +13,4 @@ RUN pip install psycopg2 \
     sqlalchemy==1.4.26
 
 env PYTHONPATH=`pwd`
+CMD [ "/start-reload.sh" ]

@@ -24,12 +24,14 @@ For not using `sudo` for docker anymore in Ubuntu
 ```
 
 ## Setup repository
-First time setup: Initialize db
-```
-export PYTHONPATH=`pwd`
-bash scripts/init-db.sh
-```
-Launch the project
+- First time setup: 
+  - Initialize db
+    ```
+    export PYTHONPATH=`pwd`
+    bash scripts/init-db.sh
+    ```
+  - Create book index `curl -X PUT "localhost:9201/books?pretty"`
+- Launch the project
 ```
 docker-compose up
 ```
