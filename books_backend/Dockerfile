@@ -11,3 +11,5 @@ RUN echo "alias python=python3" >> ~/.bashrc ; \
 
 RUN pip install psycopg2 \
     sqlalchemy==1.4.26
+
+env PYTHONPATH=`pwd`

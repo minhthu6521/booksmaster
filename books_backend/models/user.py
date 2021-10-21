@@ -3,7 +3,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from database import Base
+from books_backend.database import Base
 
 
 class User(Base):
