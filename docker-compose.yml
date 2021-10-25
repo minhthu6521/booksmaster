@@ -13,6 +13,8 @@ services:
          - /app/node_modules
       networks:
          - books-network
+      depends_on:
+         -  backend-api
    database-api:
       build:
          context: books_database_api
@@ -27,6 +29,8 @@ services:
          - "8001:80"
       networks:
          - books-network
+      volumes:
+         - ./books_database_api:/app
    books-elastics-db:
       environment:
          - discovery.type=single-node

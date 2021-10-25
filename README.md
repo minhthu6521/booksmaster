@@ -24,19 +24,29 @@ For not using `sudo` for docker anymore in Ubuntu
 ```
 
 ## Setup repository
-- First time setup: 
-  - Initialize db
-    ```
-    export PYTHONPATH=`pwd`
-    bash scripts/init-db.sh
-    ```
-  - Create book index `curl -X PUT "localhost:9201/books?pretty"`
 - Launch the project
 ```
 docker-compose up
 ```
 
+- First time setup: 
+  - Initialize db
+    ```
+    export PYTHONPATH=`pwd`
+    bash books_backend/init-postgres-db.sh
+    ```
+  - Update alembic
+    ```
+    alembic upgrade head
+    ```
+  - Create book index `curl -X PUT "localhost:9201/books?pretty"`
+
 ## Useful URLs
 - For UI: `localhost:3000`
 - ElasticSearch API: `localhost:9201`
 - For books content API: `localhost:8001`
+
+## Dev commands
+
+- Create new alembic `alembic revision --autogenerate -m "First migration"`
+- Create a user (there is no user management yet) 
