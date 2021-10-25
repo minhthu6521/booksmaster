@@ -1,6 +1,8 @@
 from typing import List
 from typing import Optional
 
+from sqlalchemy import Text
+
 from database import Base
 from models.author import AuthorBase
 from models.author import book_author_table
@@ -12,6 +14,9 @@ from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 
+from models.book import Book
+from models.user import User
+
 
 class RatingORM(Base):
     __tablename__ = "rating"
@@ -20,12 +25,17 @@ class RatingORM(Base):
     user_id = Column(Integer, ForeignKey('users.id', name='rating_user_id'))
     book = relationship("BookORM", back_populates="ratings")
     user = relationship("UserORM", back_populates="ratings")
+    review = Column(Text)
 
 
-class Rating(BaseModel):
+class RatingBase(BaseModel):
     id: int
-    title: str
-    isbn: Optional[str] = None
+    review: str
 
     class Config:
         orm_mode = True
+
+
+class Rating(RatingBase):
+    book: Book
+    user: User
