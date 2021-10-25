@@ -37,6 +37,6 @@ def fake_decode_token(token, db: Session = Depends(get_db)):
     return db.query(UserORM).first()
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    user = fake_decode_token(token)
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    user = fake_decode_token(token, db)
     return user

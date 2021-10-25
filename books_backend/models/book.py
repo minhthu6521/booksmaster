@@ -2,6 +2,8 @@ from typing import List
 from typing import Optional
 
 from database import Base
+from models.author import AuthorBase
+from models.author import book_author_table
 from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
@@ -9,10 +11,6 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy.orm import relationship
-
-from models.author import AuthorBase
-
-from models.author import book_author_table
 
 book_genre_table = Table('book_genre', Base.metadata,
                          Column('book_id', ForeignKey('books.id', name="book_genre_fk"), primary_key=True),
@@ -56,17 +54,20 @@ class GenreORM(Base):
     )
 
 
-class Genre(BaseModel):
+class GenreBase(BaseModel):
     id: int
     name: str
-    books: List[BookBase] = []
 
     class Config:
         orm_mode = True
 
 
+class Genre(GenreBase):
+    books: List[BookBase] = []
+
+
 class Book(BookBase):
-    genres: List[Genre] = []
+    genres: List[GenreBase] = []
     authors: List[AuthorBase] = []
 
 
