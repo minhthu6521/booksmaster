@@ -21,7 +21,7 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/books", response_model=List[Book])
-def get_users(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
+def get_books(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
     books_query = db.query(BookORM)
     if q:
         books_query = books_query.fillter(BookORM.title.like(f"%{q}%"))

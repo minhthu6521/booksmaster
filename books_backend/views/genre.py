@@ -25,7 +25,7 @@ def get_genre(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/genre", response_model=List[Genre])
-def get_users(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
+def get_genres(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
     genre_query = db.query(GenreORM)
     if q:
         genre_query = genre_query.fillter(GenreORM.title.like(f"%{q}%"))
