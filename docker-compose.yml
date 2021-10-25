@@ -5,6 +5,9 @@ services:
       build:
          context: ./books-ui
          dockerfile: Dockerfile
+      environment:
+         BACKEND_API: ${BACKEdND_API:-http://localhost:8002}
+         CONTENT_API: ${CONTENT_API:-http://localhost:8001}
       tty: true
       ports:
          - "3000:3000"
