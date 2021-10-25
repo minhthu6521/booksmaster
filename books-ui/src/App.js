@@ -67,15 +67,6 @@ class Books extends React.Component {
                 <ul>
                     {items}
                 </ul>
-
-                <Switch>
-                    <Route path={`books/:bookId`}>
-                        <Book/>
-                    </Route>
-                    <Route path="/books">
-                        <h3>Please select a topic.</h3>
-                    </Route>
-                </Switch>
             </div>
         );
     }
