@@ -16,6 +16,7 @@ def add_genre(db: Session, genre_name: str):
 
 
 def get_or_create_genre(db: Session, genre_name: str):
+    genre_name = genre_name.capitalize()
     genre = get_genre(db, genre_name)
     if not genre:
         genre = add_genre(db, genre_name)
@@ -24,5 +25,11 @@ def get_or_create_genre(db: Session, genre_name: str):
 
 def add_genre_to_book(db: Session, genre: GenreORM, book: BookORM):
     book.genres.append(genre)
+    db.flush()
+    return book
+
+
+def remove_genre_from_book(db: Session, genre: GenreORM, book: BookORM):
+    book.genres.remove(genre)
     db.flush()
     return book

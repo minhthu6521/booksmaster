@@ -1,5 +1,7 @@
 from typing import Optional
 
+from sqlalchemy.orm import relationship
+
 from database import Base
 from database import get_db
 from fastapi import Depends
@@ -20,6 +22,7 @@ class UserORM(Base):
     is_active = Column(Boolean, default=True)
     first_name = Column(String)
     last_name = Column(String)
+    ratings = relationship("RatingORM", back_populates="user")
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

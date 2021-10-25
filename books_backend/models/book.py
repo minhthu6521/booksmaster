@@ -32,6 +32,7 @@ class BookORM(Base):
     authors = relationship("AuthorORM",
                            secondary=book_author_table,
                            back_populates="books")
+    ratings = relationship("RatingORM", back_populates="book")
 
 
 class BookBase(BaseModel):
