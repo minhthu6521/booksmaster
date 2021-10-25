@@ -24,7 +24,7 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 def get_users(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
     books_query = db.query(BookORM)
     if q:
-        books_query = books_query.fillter(Book.title.like(f"%{q}%"))
+        books_query = books_query.fillter(BookORM.title.like(f"%{q}%"))
     books = books_query.offset(skip).limit(limit).all()
     return books
 

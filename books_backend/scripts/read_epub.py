@@ -28,7 +28,21 @@ def epubtohtml(path):
         return
     read_metadata = lambda x, y: strip_metadata(book.get_metadata(x, y))
     title = read_metadata('DC', 'title')
-    author = read_metadata('DC', 'creator')
+    authors = read_metadata('DC', 'creator')
+    authors = authors.split(";")
+    authors_json = []
+    for author in authors:
+        if "," not in author:
+            author_to_json = {
+                "first_name": " ".join(author.split(" ")[:-1]),
+                "last_name": author.split(" ")[-1]
+            }
+        else:
+            author_to_json = {
+                "first_name": author.split(",")[1],
+                "last_name": author.split(",")[0]
+            }
+        authors_json.append(author_to_json)
     isbn = read_metadata('DC', 'identifier')
     language = read_metadata('DC', 'language') or "en"
     description = html2text(read_metadata('DC', 'description'))
@@ -38,7 +52,7 @@ def epubtohtml(path):
     content_html = b"".join(chapters).decode("utf-8")
     return {
         "title": title,
-        "author": author,
+        "author": authors_json,
         "isbn": isbn,
         "language": language,
         "description": description,

@@ -1,12 +1,21 @@
 import os
+import pdb
 import sys
 
+from database import engine
+from elasticsearch import Elasticsearch
+from models.author import AuthorORM
+from models.book import BookORM
+from scripts.read_epub import epubtohtml
 from sqlalchemy.orm import Session
 
-from books_backend.database import engine
-from books_backend.models.book import BookORM
-from books_database_api.database import es
-from read_epub import epubtohtml
+es = Elasticsearch(
+    [os.getenv("ELASTIC_SEARCH_URL") or "localhost"],
+    sniff_on_start=True,
+    sniff_on_connection_fail=True,
+    sniffer_timeout=60,
+    port=os.getenv("ELASTIC_SEARCH_PORT") or 9201,
+)
 
 
 def get_book():
@@ -21,9 +30,18 @@ def add_book(path):
         return
     with Session(engine) as session:
         session.expire_on_commit = False
+        authors = book_content.pop("author")
         book = BookORM(title=book_content.get("title", ""),
                        isbn=book_content.get("isbn", ""),
                        language=book_content.get("language", "en"))
+        for au in authors:
+            author = session.query(AuthorORM).filter(AuthorORM.first_name == au["first_name"],
+                                                     AuthorORM.last_name == au["last_name"]).first()
+            if not author:
+                author = AuthorORM(first_name=au["first_name"], last_name=au["last_name"])
+                session.add(author)
+                session.flush()
+            book.authors.append(author)
         session.add(book)
         session.commit()
         book_content["external_id"] = book.id
@@ -54,6 +72,5 @@ def delete_books():
 
 if __name__ == '__main__':
     path = sys.argv[1]
-    get_book()
     delete_books()
     add_all_books_in_dir(path, add_book)
