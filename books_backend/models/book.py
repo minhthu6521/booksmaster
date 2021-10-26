@@ -12,6 +12,9 @@ from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 
+from models.rating import RatingBase
+from models.user import User
+
 book_genre_table = Table('book_genre', Base.metadata,
                          Column('book_id', ForeignKey('books.id', name="book_genre_fk"), primary_key=True),
                          Column('genre_id', ForeignKey('genre.id', name="genre_book_fk"), primary_key=True),
@@ -70,7 +73,13 @@ class Genre(GenreBase):
 class Book(BookBase):
     genres: List[GenreBase] = []
     authors: List[AuthorBase] = []
+    ratings: List[RatingBase] = []
 
 
 class Author(AuthorBase):
     books: List[Book] = []
+
+
+class Rating(RatingBase):
+    book: Book
+    user: User

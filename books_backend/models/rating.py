@@ -1,21 +1,14 @@
-from typing import List
 from typing import Optional
 
-from sqlalchemy import Text
-
-from database import Base
-from models.author import AuthorBase
-from models.author import book_author_table
 from pydantic import BaseModel
 from sqlalchemy import Column
+from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import Table
+from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
-from models.book import Book
-from models.user import User
+from database import Base
 
 
 class RatingORM(Base):
@@ -26,16 +19,14 @@ class RatingORM(Base):
     book = relationship("BookORM", back_populates="ratings")
     user = relationship("UserORM", back_populates="ratings")
     review = Column(Text)
+    score = Column(Float)
 
 
 class RatingBase(BaseModel):
     id: int
-    review: str
+    score: float
+    review: Optional[str]
 
     class Config:
         orm_mode = True
 
-
-class Rating(RatingBase):
-    book: Book
-    user: User
