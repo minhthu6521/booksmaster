@@ -74,6 +74,32 @@ class Book extends React.Component {
             <h3>{this.state.title}</h3>
             <div><label>Author: </label>{authors}</div>
             { genres && <div><label>Genres: </label>{genres}</div>}
+            <button>Edit</button>
         </div>;
     }
+}
+
+class BookEditFOrm extends React.Component {
+  handleSubmit = (event) => {
+    event.preventDefault()
+    console.log(event.target[0].value)
+    console.log(event.target.elements.username.value)
+    console.log(event.target.username.value)
+    console.log(this.inputNode.value)
+  }
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="username"
+            ref={node => (this.inputNode = node)}
+          />
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+    )
+  }
 }

@@ -6,7 +6,7 @@ services:
          context: ./books-ui
          dockerfile: Dockerfile
       environment:
-         BACKEND_API: ${BACKEdND_API:-http://localhost:8002}
+         BACKEND_API: ${BACKEND_API:-http://localhost:8002}
          CONTENT_API: ${CONTENT_API:-http://localhost:8001}
       tty: true
       ports:
@@ -24,8 +24,8 @@ services:
          dockerfile: Dockerfile
       container_name: database-api
       environment:
-         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-localhost}
-         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9201}
+         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-books-elastics-db}
+         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9200}
       depends_on:
          -  books-elastics-db
       ports:
@@ -66,8 +66,8 @@ services:
          dockerfile: Dockerfile
       container_name: backend-api
       environment:
-         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-localhost}
-         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9201}
+         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-books-elastics-db}
+         ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9200}
          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
          POSTGRES_USER: ${POSTGRES_USER:-test}
          POSTGRES_PORT: ${POSTGRES_PORT:-5432}

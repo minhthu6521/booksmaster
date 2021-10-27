@@ -10,7 +10,8 @@ RUN echo "alias python=python3" >> ~/.bashrc ; \
     echo "alias pip=pip3" >> ~/.bashrc
 
 RUN pip install psycopg2 \
-    sqlalchemy==1.4.26
+    sqlalchemy==1.4.26 \
+    cleantext-tn==0.0.1
 
 env PYTHONPATH=`pwd`
 CMD [ "/start-reload.sh" ]
