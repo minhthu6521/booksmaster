@@ -14,4 +14,5 @@ def get_book_by_id(book_id: int, db: Session):
 def update_book_metadata(book: BookORM, json_data: BookBase):
     book.title = json_data.title or book.title
     book.isbn = json_data.isbn or book.isbn
+    book.description = json_data.description or book.description
     return book

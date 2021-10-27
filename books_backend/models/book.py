@@ -1,6 +1,8 @@
 from typing import List
 from typing import Optional
 
+from sqlalchemy import Text
+
 from database import Base
 from models.author import AuthorBase
 from models.author import book_author_table
@@ -27,6 +29,7 @@ class BookORM(Base):
     title = Column(String(255), index=True)
     isbn = Column(String)
     language = Column(String(5))
+    description = Column(Text)
     genres = relationship(
         "GenreORM",
         secondary=book_genre_table,
@@ -42,6 +45,7 @@ class BookBase(BaseModel):
     id: int
     title: str
     isbn: Optional[str] = None
+    description: Optional[str] = None
 
     class Config:
         orm_mode = True

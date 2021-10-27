@@ -40,7 +40,7 @@ async def update_book_metadata_api(book_id: int, book_json: BookBase, db: Sessio
     book = get_book_by_id(book_id, db)
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
-    book = update_book_metadata(book, book_json, db)
+    book = update_book_metadata(book, book_json)
     db.commit()
     return book
 
