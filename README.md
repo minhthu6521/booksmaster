@@ -40,6 +40,9 @@ docker-compose up
     alembic upgrade head
     ```
   - Create book index `curl -X PUT "localhost:9201/books?pretty"`
+  - Create a user (there is no user management yet) 
+- After building
+  - Run `docker exec -d database-api bash install-nltk-package.sh`
 
 ## Useful URLs
 - For UI: `localhost:3000`
@@ -49,4 +52,3 @@ docker-compose up
 ## Dev commands
 
 - Create new alembic `alembic revision --autogenerate -m "First migration"`
-- Create a user (there is no user management yet) 

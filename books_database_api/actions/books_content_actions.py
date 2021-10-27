@@ -27,4 +27,5 @@ def get_word_cloud_of_book_content(ext_id: int, min_occurence: int = 10):
         if occurence >= min_occurence:
             word = WordFrequency(text=key, value=list_of_words.count(key))
             wordcloud.words.append(word)
+    wordcloud.words = sorted(wordcloud.words, key=lambda d: d.value, reverse=True)
     return wordcloud

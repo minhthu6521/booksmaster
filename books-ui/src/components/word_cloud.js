@@ -35,25 +35,44 @@ export default class WordCloud extends React.Component {
         this.setState({showWordsForSelection: !current})
     }
 
+    changeWordToShow = (event) => {
+        let result = this.state.words.map(obj => {
+            return {
+                text: obj.text,
+                value: obj.value,
+                unchecked: event.target.name == obj.text ? !obj.unchecked : obj.unchecked
+            }
+        })
+        this.setState({words: result})
+    }
+
     render() {
-        let items = [];
-        for (const value of this.state.words) {
-            items.push(<div>
-                <input type="checkbox"
-                       id={value.text}
-                       name={value.text}
-                       defaultChecked={!value.unchecked}/>
-                <label htmlFor={value.text}>{value.text}</label>
+        if (this.state.words.length) {
+            let words_to_select = [],
+                words_to_show = [];
+            for (const value of this.state.words) {
+                words_to_select.push(<div key={value.text}>
+                    <input type="checkbox"
+                           id={value.text}
+                           name={value.text}
+                           defaultChecked={!value.unchecked}
+                           onChange={this.changeWordToShow}/>
+                    <label htmlFor={value.text}>{value.text} - Occurrence: {value["value"]}</label>
+                </div>)
+                if (!value.unchecked) {
+                    words_to_show.push(value)
+                }
+            }
+            return (<div>
+                <h3>Word cloud</h3>
+                <button onClick={this.showWordSelection}>Select words to remove from Word Cloud</button>
+                {this.state.showWordsForSelection ? (
+                    <div>{words_to_select}</div>
+                ) : (<div></div>)}
+                <div style={{height: 600, width: 600}}><ReactWordcloud words={words_to_show}
+                                                                       options={this.state.options}/></div>
             </div>)
         }
-        return (<div>
-            <h3>Word cloud</h3>
-            <button onClick={this.showWordSelection}>Select words to remove from Word Cloud</button>
-            {this.state.showWordsForSelection ? (
-                <div>{items}</div>
-            ) : (<div></div>)}
-            <div style={{height: 600, width: 600}}><ReactWordcloud words={this.state.words}
-                                                                   options={this.state.options}/></div>
-        </div>)
+        return (<div></div>)
     }
 }
