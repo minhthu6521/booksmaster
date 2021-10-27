@@ -13,6 +13,7 @@ export default class WordCloud extends React.Component {
                 rotationAngles: [0, 0],
                 enableOptimizations: true,
                 spiral: "archimedean",
+                fontSizes: [12, 45]
             },
             showWordsForSelection: false
         };
@@ -57,7 +58,7 @@ export default class WordCloud extends React.Component {
                            name={value.text}
                            defaultChecked={!value.unchecked}
                            onChange={this.changeWordToShow}/>
-                    <label htmlFor={value.text}>{value.text} - Occurrence: {value["value"]}</label>
+                    <label htmlFor={value.text}>{value.text} - Occurrence: {value["occurrence"]}</label>
                 </div>)
                 if (!value.unchecked) {
                     words_to_show.push(value)
