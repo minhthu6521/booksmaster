@@ -46,6 +46,11 @@ services:
          -  books_elastic_db:/usr/share/elasticsearch/data
       networks:
          - books-network
+   redis-image:
+      image: redis:6.2
+      container_name: redis-image
+      networks:
+         - books-network
    books-postgres-db:
       container_name: books-postgres-db
       build:

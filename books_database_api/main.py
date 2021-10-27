@@ -1,7 +1,12 @@
 from typing import Optional
 
+from aiocache.serializers import JsonSerializer
+from fastapi import Depends
+from aiocache import cached, Cache
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 from actions.books_content_actions import get_word_cloud_of_book_content
 from models.word_cloud import WordCloud
@@ -19,6 +24,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+cache = Cache(Cache.REDIS, endpoint="redis-image")
+
 
 @app.get("/")
 def read_root():
@@ -26,6 +33,7 @@ def read_root():
 
 
 @app.get("/books/{book_id}/contents/wordcloud", response_model=WordCloud)
-def get_word_cloud_from_book_content(book_id: int):
+@cached(ttl=100, cache=Cache.REDIS, endpoint="redis-image", serializer=JsonSerializer(),)
+async def get_word_cloud_from_book_content(book_id: int):
     result = get_word_cloud_of_book_content(book_id)
-    return result
+    return jsonable_encoder(result)

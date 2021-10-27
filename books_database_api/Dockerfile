@@ -17,10 +17,10 @@ RUN pip install psycopg2 \
     sqlalchemy==1.4.26 \
     cleantext-tn==0.0.6 \
     elasticsearch==7.15.1 \
-    nltk
+    aioredis==1.3.1 \
+    aiocache[redis]==0.11.1
 
 CMD [ "wait-for-it", '${ELASTIC_SEARCH_URL}:${ELASTIC_SEARCH_PORT}', '-t', '120' ]
-
 
 CMD [ "/start-reload.sh" ]
 

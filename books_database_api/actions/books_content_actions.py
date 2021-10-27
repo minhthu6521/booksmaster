@@ -15,7 +15,7 @@ def get_book_content(ext_id: int, language=None):
     return res['hits']['hits'][0]["_source"]['content']
 
 
-def get_word_cloud_of_book_content(ext_id: int, min_occurence: int = 1):
+def get_word_cloud_of_book_content(ext_id: int, min_occurence: int = 10):
     content = get_book_content(ext_id)
     if not content:
         return
