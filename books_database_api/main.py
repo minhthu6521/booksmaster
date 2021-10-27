@@ -1,11 +1,23 @@
 from typing import Optional
 
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from actions.books_content_actions import get_word_cloud_of_book_content
 from models.word_cloud import WordCloud
 
 app = FastAPI()
+origins = [
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")

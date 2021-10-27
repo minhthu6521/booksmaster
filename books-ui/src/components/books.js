@@ -1,6 +1,7 @@
 import React from "react";
 import {backend_url} from "../variables";
 import {Link, Route, Switch} from "react-router-dom";
+import WordCloud from "./word_cloud";
 
 export default class Books extends React.Component {
     constructor(props) {
@@ -75,11 +76,12 @@ class Book extends React.Component {
             <div><label>Author: </label>{authors}</div>
             { genres && <div><label>Genres: </label>{genres}</div>}
             <button>Edit</button>
+            <WordCloud bookId={this.state.id} />
         </div>;
     }
 }
 
-class BookEditFOrm extends React.Component {
+class BookEditForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault()
     console.log(event.target[0].value)

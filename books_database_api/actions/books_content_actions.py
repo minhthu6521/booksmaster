@@ -15,7 +15,7 @@ def get_book_content(ext_id: int, language=None):
     return res['hits']['hits'][0]["_source"]['content']
 
 
-def get_word_cloud_of_book_content(ext_id: int):
+def get_word_cloud_of_book_content(ext_id: int, min_occurence: int = 1):
     content = get_book_content(ext_id)
     if not content:
         return
@@ -23,7 +23,8 @@ def get_word_cloud_of_book_content(ext_id: int):
     wordcloud = WordCloud(words=[])
     distinct = set(list_of_words)
     for key in distinct:
-        word = WordFrequency(text=key, value=list_of_words.count(key))
-        wordcloud.words.append(word)
+        occurence = list_of_words.count(key)
+        if occurence >= min_occurence:
+            word = WordFrequency(text=key, value=list_of_words.count(key))
+            wordcloud.words.append(word)
     return wordcloud
-
