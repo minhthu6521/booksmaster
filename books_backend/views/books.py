@@ -12,8 +12,6 @@ from database import get_db
 from models.book import Book
 from models.book import BookBase
 from models.book import BookORM
-from models.user import User
-from models.user import UserORM
 from models.user import get_current_user
 from views.utils import app
 

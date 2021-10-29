@@ -2,6 +2,7 @@ import React from "react";
 import {backend_url} from "../variables";
 import {Link, Route, Switch} from "react-router-dom";
 import WordCloud from "./word_cloud";
+import ReactStars from "react-rating-stars-component"
 
 export default class Books extends React.Component {
     constructor(props) {
@@ -81,6 +82,18 @@ class Book extends React.Component {
             this.setState(data)
         })
     }
+    ratingChanged = (newRating) => {
+        const editHandler = fetch(`${backend_url}/api/books/${this.state.id}/ratings/${newRating}`,
+            {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        editHandler.then(res => res.json()).then(data => {
+            this.setState(data)
+        })
+    }
 
     render() {
         const authors = [], genres = [];
@@ -102,6 +115,14 @@ class Book extends React.Component {
                 <div>
                     <h3>{this.state.title}</h3>
                     <p>{this.state.description}</p>
+                    <div>Rating: {this.state.current_user_rating}<ReactStars
+                        count={5}
+                        onChange={this.ratingChanged}
+                        size={24}
+                        isHalf={true}
+                        value={this.state.current_user_rating}
+                        activeColor="#ffd700"
+                    /></div>
                 </div>
             )}
             <div><label>Author: </label>{authors}</div>

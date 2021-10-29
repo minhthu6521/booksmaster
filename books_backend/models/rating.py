@@ -25,6 +25,7 @@ class RatingORM(Base):
 class RatingBase(BaseModel):
     id: int
     score: float
+    user_id: int
     review: Optional[str]
 
     class Config:

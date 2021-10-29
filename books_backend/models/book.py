@@ -1,21 +1,23 @@
 from typing import List
 from typing import Optional
 
-from sqlalchemy import Text
-
-from database import Base
-from models.author import AuthorBase
-from models.author import book_author_table
 from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
+from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
+from database import Base
+from database import SessionLocal
+from models.author import AuthorBase
+from models.author import book_author_table
 from models.rating import RatingBase
 from models.user import User
+from models.user import get_current_user
+from models.utils import PropertyBaseModel
 
 book_genre_table = Table('book_genre', Base.metadata,
                          Column('book_id', ForeignKey('books.id', name="book_genre_fk"), primary_key=True),
@@ -41,7 +43,7 @@ class BookORM(Base):
     ratings = relationship("RatingORM", back_populates="book")
 
 
-class BookBase(BaseModel):
+class BookBase(PropertyBaseModel):
     id: int
     title: str
     isbn: Optional[str] = None
@@ -78,6 +80,14 @@ class Book(BookBase):
     genres: List[GenreBase] = []
     authors: List[AuthorBase] = []
     ratings: List[RatingBase] = []
+
+    @property
+    def current_user_rating(self):
+        db = SessionLocal()
+        user = get_current_user(db)
+        db.close()
+        rating = next((x for x in self.ratings if x.user_id == user.id), None)
+        return rating.score if rating else None
 
 
 class Author(AuthorBase):
