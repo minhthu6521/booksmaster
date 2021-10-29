@@ -9,6 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from actions.books_content_actions import get_word_cloud_of_book_content
 from models.word_cloud import WordCloud
+from redis_conf import REDIS_CONF
 
 app = FastAPI()
 origins = [
@@ -30,8 +31,8 @@ def read_root():
 
 
 @app.get("/books/{book_id}/contents/wordcloud", response_model=WordCloud)
-@cached(ttl=864000, cache=Cache.REDIS, endpoint="redis-image", serializer=JsonSerializer(),)
-async def get_word_cloud_from_book_content(book_id: int, min: Optional[int] = 10, max: Optional[int] = None):
+@cached(**REDIS_CONF)
+async def get_word_cloud_from_book_content(book_id: int, min: Optional[int] = 1, max: Optional[int] = None):
     result = get_word_cloud_of_book_content(book_id, min, max)
     return jsonable_encoder(result)
 

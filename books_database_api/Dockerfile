@@ -3,6 +3,7 @@ COPY . /app
 
 ENV ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL:-books-elastics-db}
 ENV ELASTIC_SEARCH_PORT=${ELASTIC_SEARCH_PORT:-9200}
+ENV REDIS_ENDPOINT=${REDIS_ENDPOINT:-redis-image}
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-pip  \
