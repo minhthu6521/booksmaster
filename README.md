@@ -42,7 +42,7 @@ docker-compose up
   - Create book index `curl -X PUT "localhost:9201/books?pretty"`
   - Create a user (there is no user management yet) 
 - After building
-  - Run `docker exec -d database-api bash install-nltk-package.sh`
+  - Run `docker exec -d database-api /bin/bash -c "install-nltk-package.sh"`
 
 ## Useful URLs
 - For UI: `localhost:3000`

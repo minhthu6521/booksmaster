@@ -2,6 +2,7 @@ import React from "react";
 import {backend_url, content_api} from "../variables";
 import {Link, Route, Switch} from "react-router-dom";
 import ReactWordcloud from "react-wordcloud";
+import DataVisualization from "./data_visualization";
 
 export default class WordCloud extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class WordCloud extends React.Component {
 
     componentDidMount() {
         if (this.props.bookId && this.state.words.length === 0) {
-            const getWordCount = fetch(`${content_api}/books/${this.props.bookId}/contents/wordcloud`,
+            const getWordCount = fetch(`${content_api}/books/${this.props.bookId}/contents/wordcloud?max=200&min=100`,
                 {
                     keepalive: true
                 });
@@ -41,6 +42,7 @@ export default class WordCloud extends React.Component {
             return {
                 text: obj.text,
                 value: obj.value,
+                occurrence: obj.occurrence,
                 unchecked: event.target.name == obj.text ? !obj.unchecked : obj.unchecked
             }
         })
@@ -71,7 +73,8 @@ export default class WordCloud extends React.Component {
                     <div>{words_to_select}</div>
                 ) : (<div></div>)}
                 <div style={{height: 600, width: 600}}><ReactWordcloud words={words_to_show}
-                                                                       options={this.state.options}/></div>
+                                                                       options={this.state.options}/>
+                    <DataVisualization dataSet={words_to_show}/></div>
             </div>)
         }
         return (<div></div>)
