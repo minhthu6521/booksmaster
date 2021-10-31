@@ -72,5 +72,4 @@ def delete_books():
 
 if __name__ == '__main__':
     path = sys.argv[1]
-    delete_books()
-    add_all_books_in_dir(path, add_book)
+    add_book(path)

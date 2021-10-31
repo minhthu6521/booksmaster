@@ -1,7 +1,7 @@
 import React from "react";
 import {backend_url} from "../variables";
 import {Link, Route, Switch} from "react-router-dom";
-import WordCloud from "./word_cloud";
+import ContentAnalysis from "./word_content_analysis";
 import ReactStars from "react-rating-stars-component"
 
 export default class Books extends React.Component {
@@ -127,7 +127,7 @@ class Book extends React.Component {
             )}
             <div><label>Author: </label>{authors}</div>
             {genres && <div><label>Genres: </label>{genres}</div>}
-            <WordCloud bookId={this.state.id}/>
+            <ContentAnalysis bookId={this.state.id}/>
         </div>;
     }
 }

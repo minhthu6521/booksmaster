@@ -1,15 +1,31 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import Histogram from "./histogram";
 import * as d3 from "d3";
 
 export default function DataVisualization(props) {
+    const svg = useRef(null);
     useEffect(() => {
         let data = props.dataSet
+        let chart = Histogram(data, {
+            value: d => d.value,
+            width: 600,
+            height: 500,
+            color: "steelblue",
+            label: "Number of times repeated →"
+        })
+        svg.current.appendChild(chart)
+    }, [])
+    return (
+        <div>
+            <div id="occurrence-of-words">
+                <div ref={svg}/>
+            </div>
+        </div>
+    )
+}
 
-        /*d3.select('#BarChart').selectAll('div').data(dataSet)
-            .enter().append('div').classed('bar', true)
-        d3.select('#BarChart').selectAll('.bar').style('height', bar => `${bar.value + 10}px`)
-            .style('width', '80px')
-        */
+
+/*
         var svg = d3.select("#svg svg"),
             margin = 200,
             width = svg.attr("width") - margin,
@@ -56,12 +72,4 @@ export default function DataVisualization(props) {
             .attr("height", function (d) {
                 return height - yScale(d.value);
             });
-    }, [])
-    return (
-        <div>
-            <div id="svg">
-                <svg width="6000" height="500"></svg>
-            </div>
-        </div>
-    )
-}
+*/

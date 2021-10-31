@@ -4,7 +4,7 @@ import {Link, Route, Switch} from "react-router-dom";
 import ReactWordcloud from "react-wordcloud";
 import DataVisualization from "./data_visualization";
 
-export default class WordCloud extends React.Component {
+export default class ContentAnalysis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +22,7 @@ export default class WordCloud extends React.Component {
 
     componentDidMount() {
         if (this.props.bookId && this.state.words.length === 0) {
-            const getWordCount = fetch(`${content_api}/books/${this.props.bookId}/contents/wordcloud?max=200&min=100`,
+            const getWordCount = fetch(`${content_api}/books/${this.props.bookId}/contents/wordcloud?min=1`,
                 {
                     keepalive: true
                 });
@@ -68,7 +68,7 @@ export default class WordCloud extends React.Component {
             }
             return (<div>
                 <h3>Word cloud</h3>
-                <button onClick={this.showWordSelection}>Select words to remove from Word Cloud</button>
+                <button onClick={this.showWordSelection}>Select words to remove from Analysis</button>
                 {this.state.showWordsForSelection ? (
                     <div>{words_to_select}</div>
                 ) : (<div></div>)}
