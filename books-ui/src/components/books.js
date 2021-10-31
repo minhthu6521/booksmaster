@@ -114,7 +114,7 @@ class Book extends React.Component {
             ) : (
                 <div>
                     <h3>{this.state.title}</h3>
-                    <p>{this.state.description}</p>
+                    <div dangerouslySetInnerHTML={{__html: this.state.description}} ></div>
                     <div>Rating: {this.state.current_user_rating}<ReactStars
                         count={5}
                         onChange={this.ratingChanged}

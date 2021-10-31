@@ -3,6 +3,7 @@ import Books from './components/books.js'
 
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
+import Genres from "./components/genre";
 
 export default class App extends React.Component {
     render() {
@@ -13,11 +14,20 @@ export default class App extends React.Component {
                         <li>
                             <Link to="/">Home</Link>
                         </li>
+                        <li>
+                            <Link to='/books'>Books</Link>
+                        </li>
+                        <li>
+                            <Link to='/genres'>Genres</Link>
+                        </li>
                     </ul>
 
                     <Switch>
                         <Route path="/books">
                             <Books/>
+                        </Route>
+                        <Route path="/genres">
+                            <Genres/>
                         </Route>
                         <Route path="/">
                             <Home/>

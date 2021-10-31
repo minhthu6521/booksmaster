@@ -11,18 +11,14 @@ from actions.genre_actions import get_or_create_genre
 from actions.genre_actions import remove_genre_from_book
 from database import get_db
 from models.book import Book
-from models.book import BookORM
-
+from models.book import Genre
+from models.book import GenreORM
 from views.utils import app
 
-from models.book import GenreORM
 
-from models.book import Genre
-
-
-@app.get("/api/genre/{genre_id}", response_model=Genre)
+@app.get("/api/genres/{genre_id}", response_model=Genre)
 def get_genre(genre_id: int, db: Session = Depends(get_db)):
-    genre = db.query(GenreORM).filter(BookORM.id == genre_id).first()
+    genre = db.query(GenreORM).filter(GenreORM.id == genre_id).first()
     if genre is None:
         raise HTTPException(status_code=404, detail="Genre not found")
     return genre
