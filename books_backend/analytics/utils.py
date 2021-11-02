@@ -1,0 +1,15 @@
+BOOLEAN_DATA_TYPE = "boolean"
+DATETIME_DATA_TYPE = "datetime"
+DATE_DATA_TYPE = "date"
+INTEGER_DATA_TYPE = "integer"
+CATEGORIZED_DATA_TYPE = "categorized"
+RAW_TEXT_DATA_TYPE = "text"
+
+COLUMN_TYPES = [BOOLEAN_DATA_TYPE, DATE_DATA_TYPE, DATETIME_DATA_TYPE, INTEGER_DATA_TYPE, CATEGORIZED_DATA_TYPE,
+                RAW_TEXT_DATA_TYPE]
+
+MODELS = []
+
+
+def for_analytics(cls):
+    MODELS.append(cls)

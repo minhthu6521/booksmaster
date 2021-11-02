@@ -63,9 +63,9 @@ class Genre extends React.Component {
     render() {
         let books = []
         for (const book of this.state.books) {
-            books.push(<Link to={`/books/${book.id}`}>
+            books.push(<p><Link to={`/books/${book.id}`}>
                 {book.title}
-            </Link>)
+            </Link></p>)
         }
         return <div key={this.state.id}>
             <h3>{this.state.name}</h3>

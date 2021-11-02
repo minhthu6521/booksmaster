@@ -1,3 +1,4 @@
+from analytics import for_analytics
 from database import Base
 from pydantic import BaseModel
 from sqlalchemy import Column
@@ -13,6 +14,7 @@ book_author_table = Table('book_author', Base.metadata,
                           )
 
 
+@for_analytics
 class AuthorORM(Base):
     __tablename__ = "author"
     id = Column(Integer, primary_key=True, index=True)

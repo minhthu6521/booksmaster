@@ -10,6 +10,7 @@ from sqlalchemy import Table
 from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
+from analytics import for_analytics
 from database import Base
 from database import SessionLocal
 from models.author import AuthorBase
@@ -18,6 +19,7 @@ from models.rating import RatingBase
 from models.user import User
 from models.user import get_current_user
 from models.utils import PropertyBaseModel
+from analytics.utils import CATEGORIZED_DATA_TYPE
 
 book_genre_table = Table('book_genre', Base.metadata,
                          Column('book_id', ForeignKey('books.id', name="book_genre_fk"), primary_key=True),
@@ -25,6 +27,7 @@ book_genre_table = Table('book_genre', Base.metadata,
                          )
 
 
+@for_analytics
 class BookORM(Base):
     __tablename__ = "books"
     id = Column(Integer, primary_key=True, index=True)
@@ -53,10 +56,11 @@ class BookBase(PropertyBaseModel):
         orm_mode = True
 
 
+@for_analytics
 class GenreORM(Base):
     __tablename__ = "genre"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), index=True)
+    name = Column(String(255), index=True, info={"data_type": CATEGORIZED_DATA_TYPE})
     books = relationship(
         "BookORM",
         secondary=book_genre_table,

@@ -8,9 +8,11 @@ from sqlalchemy import Integer
 from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
+from analytics import for_analytics
 from database import Base
 
 
+@for_analytics
 class RatingORM(Base):
     __tablename__ = "rating"
     id = Column(Integer, primary_key=True, index=True)
@@ -30,4 +32,3 @@ class RatingBase(BaseModel):
 
     class Config:
         orm_mode = True
-

@@ -2,6 +2,7 @@ from typing import Optional
 
 from sqlalchemy.orm import relationship
 
+from analytics import for_analytics
 from database import Base
 from database import get_db
 from fastapi import Depends
@@ -14,6 +15,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import Session
 
 
+@for_analytics
 class UserORM(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
