@@ -97,9 +97,9 @@ class Book extends React.Component {
 
     render() {
         const authors = [], genres = [];
-        for (const {first_name, last_name} of this.state.authors) {
-            authors.push(<p key={`author_${first_name}`}>
-                {first_name} {last_name}
+        for (const {first_name, last_name, full_name} of this.state.authors) {
+            authors.push(<p key={`author_${full_name}`}>
+                {full_name}
             </p>)
         }
         for (const {name} of this.state.genres) {

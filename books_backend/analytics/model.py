@@ -13,7 +13,6 @@ class ColumnDefinition(object):
         self.column = column
         self.type = type
         self.possible_values = possible_values
-        print(possible_values)
 
 
 class Column(PropertyBaseModel):
