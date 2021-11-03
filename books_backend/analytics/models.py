@@ -27,7 +27,7 @@ class ColumnDefinition(object):
         self.possible_values = possible_values
 
     def to_pydantic_mode(self):
-        return ColumnQuery(name=self.column.name, data_type=self.type, possible_values=self.possible_values)
+        return ColumnQuery(name=f"{self.column.table.name}.{self.column.name}", data_type=self.type, possible_values=self.possible_values)
 
 
 class Column(PropertyBaseModel):

@@ -29,7 +29,7 @@ app.add_middleware(
 def list_columns(db):
     for cls in MODELS:
         inst = inspect(cls)
-        for col in inst.mapper.c:
+        for col in inst.mapper.columns:
             data_type = col.info.get("data_type")
             possible_values = col.info.get("possible_values")
             if not data_type:
@@ -45,3 +45,8 @@ def list_of_columns_in_class():
     list_columns(db)
     db.close()
     return COLUMN_LISTS
+
+
+import views
+
+_used = views

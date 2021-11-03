@@ -18,8 +18,8 @@ class RatingORM(Base):
     id = Column(Integer, primary_key=True, index=True)
     book_id = Column(Integer, ForeignKey('books.id', name='rating_book_id'))
     user_id = Column(Integer, ForeignKey('users.id', name='rating_user_id'))
-    book = relationship("BookORM", back_populates="ratings")
-    user = relationship("UserORM", back_populates="ratings")
+    book = relationship("BookORM", back_populates="ratings", lazy='joined')
+    user = relationship("UserORM", back_populates="ratings", lazy='joined')
     review = Column(Text)
     score = Column(Float)
 
