@@ -33,7 +33,7 @@ class BookORM(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), index=True)
     isbn = Column(String)
-    language = Column(String(5))
+    language = Column(String(5), info={"data_type": CATEGORIZED_DATA_TYPE})
     description = Column(Text)
     genres = relationship(
         "GenreORM",

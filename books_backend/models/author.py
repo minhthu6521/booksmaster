@@ -1,12 +1,14 @@
-from analytics import for_analytics
-from database import Base
-from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
+
+from analytics import for_analytics
+from database import Base
+from models.utils import PropertyBaseModel
 
 book_author_table = Table('book_author', Base.metadata,
                           Column('book_id', ForeignKey('books.id', name="book_genre_fk"), primary_key=True),
@@ -24,10 +26,18 @@ class AuthorORM(Base):
                          secondary=book_author_table,
                          back_populates="authors")
 
+    @hybrid_property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
 
-class AuthorBase(BaseModel):
+
+class AuthorBase(PropertyBaseModel):
     first_name: str
     last_name: str
+
+    @property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
 
     class Config:
         orm_mode = True

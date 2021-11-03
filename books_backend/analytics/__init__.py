@@ -1,1 +1,1 @@
-from utils import *
+from analytics.utils import *
