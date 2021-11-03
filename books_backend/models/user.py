@@ -1,11 +1,5 @@
 from typing import Optional
 
-from sqlalchemy.orm import relationship
-
-from analytics import for_analytics
-from database import Base
-from database import get_db
-from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from sqlalchemy import Boolean
@@ -13,6 +7,10 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import relationship
+
+from analytics import for_analytics
+from database import Base
 
 
 @for_analytics

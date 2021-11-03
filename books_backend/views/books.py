@@ -8,12 +8,12 @@ from sqlalchemy.orm import Session
 from actions.book_actions import get_book_by_id
 from actions.book_actions import update_book_metadata
 from actions.rating_actions import update_user_rating
+from app import app
 from database import get_db
 from models.book import Book
 from models.book import BookBase
 from models.book import BookORM
 from models.user import get_current_user
-from views.utils import app
 
 
 @app.get("/api/books/{book_id}", response_model=Book)

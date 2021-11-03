@@ -15,8 +15,9 @@ from actions.genre_actions import update_genre_name
 from database import get_db
 from models.book import Book
 from models.book import Genre
+from models.book import GenreBase
 from models.book import GenreORM
-from views.utils import app
+from app import app
 
 
 @app.get("/api/genres/{genre_id}", response_model=Genre)
@@ -28,20 +29,20 @@ def get_genre(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/api/genres", response_model=List[Genre])
-def get_genres(skip: int = 0, limit: int = 100, q: Optional[str] = None, db: Session = Depends(get_db)):
+def get_genres(skip: int = 0, limit: int = 1000, q: Optional[str] = None, db: Session = Depends(get_db)):
     genre_query = db.query(GenreORM)
     if q:
-        genre_query = genre_query.fillter(GenreORM.title.like(f"%{q}%"))
+        genre_query = genre_query.fillter(GenreORM.name.like(f"%{q}%"))
     genres = genre_query.offset(skip).limit(limit).all()
     return genres
 
 
 @app.patch("/api/genres/{genre_id}", response_model=Genre)
-def edit_genre_name(genre_id: int, genre_name: str, db: Session = Depends(get_db)):
+def edit_genre_name(genre_id: int, data: GenreBase, db: Session = Depends(get_db)):
     genre = get_genre_by_id(db, genre_id)
     if genre is None:
         raise HTTPException(status_code=404, detail="Genre not found")
-    genre = update_genre_name(db, genre, genre_name)
+    genre = update_genre_name(db, genre, data.name)
     db.commit()
     return genre
 

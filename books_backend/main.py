@@ -1,7 +1,6 @@
 from starlette.requests import Request
 
-from views.utils import app
-import views
+from app import app
 
 
 @app.get("/")

@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from models.author import AuthorORM
 from models.book import Author
 from sqlalchemy.orm import Session
-from views.utils import app
+from app import app
 
 
 @app.get("/api/author/{author_id}", response_model=Author)

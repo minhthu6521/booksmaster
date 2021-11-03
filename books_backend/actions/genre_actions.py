@@ -15,9 +15,9 @@ def get_genre(db: Session, genre_name: str):
 
 
 def update_genre_name(db: Session, genre: GenreORM, new_name: str):
-    if db.query(GenreORM).filter(GenreORM.name == new_name):
+    if db.query(GenreORM).filter(GenreORM.name == new_name).first():
         return None
-    genre.name = new_name
+    genre.name = new_name.strip()
     db.flush()
     return genre
 
