@@ -8,7 +8,7 @@ from sqlalchemy import Integer
 from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
-from analytics import for_analytics
+from query_builder import for_analytics
 from database import Base
 
 

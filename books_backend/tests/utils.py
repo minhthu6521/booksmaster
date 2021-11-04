@@ -1,6 +1,5 @@
 import pytest
 
-from app import list_columns
 from models.book import BookORM
 from models.book import GenreORM
 from models.rating import RatingORM
@@ -10,7 +9,6 @@ from models.user import UserORM
 def init_data(db):
     user = UserORM(first_name="test", last_name="user", email="test_user@example.com")
     db.add(user)
-    list_columns(db)
     db.commit()
 
 

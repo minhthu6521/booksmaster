@@ -9,7 +9,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import relationship
 
-from analytics import for_analytics
+from query_builder import for_analytics
 from database import Base
 
 
