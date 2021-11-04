@@ -31,10 +31,11 @@ book_genre_table = Table('book_genre', Base.metadata,
 class BookORM(Base):
     __tablename__ = "books"
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(255), index=True)
+    title = Column(String(255), index=True, info={"label": "Title"})
     isbn = Column(String)
-    language = Column(String(5), info={"data_type": CATEGORIZED_DATA_TYPE})
-    description = Column(Text)
+    language = Column(String(5), info={"data_type": CATEGORIZED_DATA_TYPE, "label": "Language"})
+    description = Column(Text, info={"label": "Description"})
+    content_length = Column(Integer)
     genres = relationship(
         "GenreORM",
         secondary=book_genre_table,

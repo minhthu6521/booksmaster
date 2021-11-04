@@ -29,7 +29,8 @@ class DataQueryBuilder(object):
                     data_type = SQLALCHEMY_TYPES_TO_DATA_TYPE.get(col.type.__visit_name__)
                 if data_type == CATEGORIZED_DATA_TYPE and not possible_values:
                     possible_values = [PossibleValue(label=v[0], value=v[0]) for v in db.query(distinct(col)).all()]
-                self.columns.append(ColumnDefinition(column=col, type=data_type, possible_values=possible_values))
+                self.columns.append(ColumnDefinition(column=col, type=data_type, possible_values=possible_values,
+                                                     label=col.info.get("label")))
 
     def get_all_possible_columns_for_query(self):
         result = []
@@ -76,14 +77,19 @@ class DataQueryBuilder(object):
                     _query = _query.join(getattr(join_classes[0], key), isouter=True)
         return _query
 
+    def _groups_to_query(self, _query, configuration):
+        if not configuration:
+            return _query
+        groups = []
+        for group_column in configuration:
+            groups.append(self.transform_to_db_column(group_column))
+        _query = _query.group_by(*groups)
+        return _query
+
     def generate_get_query(self, configuration: QueryConfiguration, db: Session):
         _query = db
         _query = self._gets_to_query(_query, configuration.gets)
-        if configuration.groups:
-            groups = []
-            for group_column in configuration.groups:
-                groups.append(self.transform_to_db_column(group_column))
-            _query = _query.group_by(*groups)
+        _query = self._groups_to_query(_query, configuration.groups)
         print(_query)
         return _query
 
