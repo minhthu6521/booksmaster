@@ -1,5 +1,7 @@
 from sqlalchemy import distinct
 from sqlalchemy import func
+from sqlalchemy import and_
+from sqlalchemy import or_
 from sqlalchemy import inspect
 from sqlalchemy.orm import Query
 from sqlalchemy.orm import Session
@@ -11,6 +13,8 @@ from query_builder.models import Column
 from query_builder.models import ColumnDefinition
 from query_builder.models import PossibleValue
 from query_builder.models import QueryConfiguration
+
+_used = and_, or_
 
 
 class DataQueryBuilder(object):
@@ -40,12 +44,15 @@ class DataQueryBuilder(object):
 
     def transform_to_db_column(self, col: Column):
         query_col = sql_col = next(x.column for x in self.columns if x.to_pydantic_mode().name == col.name)
+        _cls = self.get_class_by_tablename(sql_col.table)
+        class_col = getattr(_cls, sql_col.name)
         if col.operation:
             for op in col.operation:
                 query_col = getattr(func, op)(query_col)
+                class_col = getattr(func, op)(class_col)
         if col.label:
-            query_col = query_col.label(col.label)
-        return query_col, sql_col
+            query_col = query_col.label(col.label.lower().replace(" ", "_"))
+        return query_col, sql_col, class_col
 
     def get_class_by_tablename(self, tablename):
         for c in self.models:
@@ -61,7 +68,7 @@ class DataQueryBuilder(object):
         gets = []
         columns = []
         for get_column in configuration:
-            query_col, sql_col = self.transform_to_db_column(get_column)
+            query_col, sql_col, _ = self.transform_to_db_column(get_column)
             gets.append(query_col)
             columns.append(sql_col)
         _query = _query.query(*gets)
@@ -82,15 +89,24 @@ class DataQueryBuilder(object):
             return _query
         groups = []
         for group_column in configuration:
-            groups.append(self.transform_to_db_column(group_column))
+            groups.append(self.transform_to_db_column(group_column)[1])
         _query = _query.group_by(*groups)
+        return _query
+
+    def _filter_to_query(self, _query, configuration):
+        if not configuration:
+            return _query
+        _filter = configuration.parse_to_sqlalchemy(self.transform_to_db_column)
+        for model in self.models:
+            _filter = _filter.replace(model.__name__, f"self.get_class_by_string('{model.__name__}')")
+        _query = _query.filter(eval(_filter))
         return _query
 
     def generate_get_query(self, configuration: QueryConfiguration, db: Session):
         _query = db
         _query = self._gets_to_query(_query, configuration.gets)
         _query = self._groups_to_query(_query, configuration.groups)
-        print(_query)
+        _query = self._filter_to_query(_query, configuration.filters)
         return _query
 
     def get_query_result(self, query: Query):

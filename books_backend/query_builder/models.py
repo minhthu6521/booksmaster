@@ -3,6 +3,9 @@ from typing import Optional
 from typing import Union
 
 from models.utils import PropertyBaseModel
+from query_builder import CLAUSES
+from query_builder import OPERATIONS
+from query_builder import VALUES
 
 
 class PossibleValue(PropertyBaseModel):
@@ -30,7 +33,6 @@ class ColumnDefinition(object):
         self.label = label
 
     def to_pydantic_mode(self):
-        print(self.label)
         return ColumnQuery(name=f"{self.column.table.name}.{self.column.name}",
                            data_type=self.type,
                            possible_values=self.possible_values,
@@ -43,22 +45,46 @@ class Column(PropertyBaseModel):
     label: Optional[str]
 
 
-class FilterItem(PropertyBaseModel):
+class FilterSubItem(PropertyBaseModel):
     item: Column
     clause: str
     value: Optional[str]
 
+    def parse_to_sqlalchemy(self, get_col_func):
+        column = get_col_func(self.item)[2]
+        value = self.value
+        if value is not None and value in VALUES.keys():
+            value = VALUES[value]
+        return CLAUSES[self.clause](column, value)
+
+
+class FilterItem(PropertyBaseModel):
+    items: List[dict]
+    operation: str
+
+    def parse_to_sqlalchemy(self, get_col_func):
+        operation = self.operation
+        _filters = []
+        for item in self.items:
+            item_cls = FilterItem.parse_obj(item) if item.get("operation") else FilterSubItem.parse_obj(item)
+            _query_filter = item_cls.parse_to_sqlalchemy(get_col_func)
+            _filters.append(_query_filter)
+        return OPERATIONS[operation](_filters)
+
 
 class QueryConfiguration(PropertyBaseModel):
     gets: List[Column]
-    filters: Optional[List[FilterItem]]
+    filters: Optional[FilterItem]
     groups: Optional[List[Column]]
 
 
 class DisplayConfiguration(PropertyBaseModel):
-    pass
+    title: str
+    type: str
+    description: Optional[str]
 
 
 class StatItem(PropertyBaseModel):
+    id: int
     query_configuration: QueryConfiguration
     display_configuration: Optional[DisplayConfiguration]

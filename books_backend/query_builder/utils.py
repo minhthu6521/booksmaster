@@ -21,9 +21,41 @@ SQLALCHEMY_TYPES_TO_DATA_TYPE = {
     "integer": NUMBER_DATA_TYPE,
 }
 
+EQUAL = "equal"
+NOT_EQUAL = "not equal"
+IN = "in"
+NOT_IN = "not in"
+FALSE = "false"
+TRUE = "true"
+NONE = "(empty)"
+EMPTY_STRING = "(empty_string)"
+LARGER = "larger"
+SMALLER = "smaller"
+AND = "and"
+OR = "or"
+
+CLAUSES = {
+    EQUAL: lambda col, value: f"{col} == {value}",
+    IN: lambda col, value: f"{col}.in_({value})",
+    NOT_EQUAL: lambda col, value: f"{col} != {value}",
+    NOT_IN: lambda col, value: f"{col}.notin_({value})",
+    LARGER: lambda col, value: f"{col} > {value}",
+    SMALLER: lambda col, value: f"{col} < {value}",
+}
+
+OPERATIONS = {
+    AND: lambda clause: f"and_({str(*clause)})",
+    OR: lambda clause: f"or_({str(*clause)})"
+}
+
+VALUES = {
+    FALSE: False,
+    TRUE: True,
+    NONE: None,
+    EMPTY_STRING: ""
+}
+
 
 def for_analytics(cls):
     MODELS.append(cls)
     return cls
-
-
