@@ -17,17 +17,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-query_builder = None
 
 
 @app.on_event("startup")
-def list_of_columns_in_class():
-    global query_builder
+def create_query_builder():
     db = SessionLocal()
     _builder = DataQueryBuilder(db=db)
     db.close()
-    query_builder = _builder
+    return _builder
 
+
+query_builder = create_query_builder()
 
 import views
 

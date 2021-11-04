@@ -45,7 +45,7 @@ class FilterItem(PropertyBaseModel):
 class QueryConfiguration(PropertyBaseModel):
     gets: List[Column]
     filters: Optional[List[FilterItem]]
-    group: Optional[List[Column]]
+    groups: Optional[List[Column]]
 
 
 class DisplayConfiguration(PropertyBaseModel):

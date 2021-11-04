@@ -38,13 +38,13 @@ class DataQueryBuilder(object):
         return result
 
     def transform_to_db_column(self, col: Column):
-        sql_col = next(x.column for x in self.columns if x.to_pydantic_mode().name == col.name)
+        query_col = sql_col = next(x.column for x in self.columns if x.to_pydantic_mode().name == col.name)
         if col.operation:
             for op in col.operation:
-                sql_col = getattr(func, op)(sql_col)
+                query_col = getattr(func, op)(query_col)
         if col.label:
-            sql_col = sql_col.label(col.label)
-        return sql_col
+            query_col = query_col.label(col.label)
+        return query_col, sql_col
 
     def get_class_by_tablename(self, tablename):
         for c in self.models:
@@ -56,22 +56,32 @@ class DataQueryBuilder(object):
             if c.__name__ == name:
                 return c
 
+    def _gets_to_query(self, _query, configuration):
+        gets = []
+        columns = []
+        for get_column in configuration:
+            query_col, sql_col = self.transform_to_db_column(get_column)
+            gets.append(query_col)
+            columns.append(sql_col)
+        _query = _query.query(*gets)
+        return self._join_to_query(_query, columns)
+
+    def _join_to_query(self, _query, columns):
+        if not all(x.table.name == columns[0].table.name for x in columns):
+            join_classes = [self.get_class_by_tablename(c.table) for c in columns]
+            join_classes_names = [jc.__name__ for jc in join_classes]
+            inst = inspect(join_classes[0])
+            for key, _relationship in inst.relationships.items():
+                if _relationship.argument in join_classes_names:
+                    _query = _query.join(getattr(join_classes[0], key), isouter=True)
+        return _query
+
     def generate_get_query(self, configuration: QueryConfiguration, db: Session):
         _query = db
-        gets = []
-        for get_column in configuration.gets:
-            gets.append(self.transform_to_db_column(get_column))
-        _query = _query.query(*gets)
-
-        _join_column = next(x.column for x in self.columns if x.to_pydantic_mode().name == configuration.gets[0].name)
-        inst = inspect(self.get_class_by_tablename(_join_column.table))
-        for _relationship in inst.relationships.values():
-            _query = _query.join(self.get_class_by_string(_relationship.argument), _relationship.primaryjoin,
-                                 isouter=True)
-
-        if configuration.group:
+        _query = self._gets_to_query(_query, configuration.gets)
+        if configuration.groups:
             groups = []
-            for group_column in configuration.group:
+            for group_column in configuration.groups:
                 groups.append(self.transform_to_db_column(group_column))
             _query = _query.group_by(*groups)
         print(_query)
@@ -84,5 +94,3 @@ class DataQueryBuilder(object):
         _query = self.generate_get_query(configuration, db)
         result = self.get_query_result(_query)
         return result
-
-
