@@ -102,11 +102,26 @@ class DataQueryBuilder(object):
         _query = _query.filter(eval(_filter))
         return _query
 
+    def _order_by_to_query(self, _query, configuration):
+        if not configuration:
+            return _query
+        _orders = []
+        for order_column in configuration:
+            col = self.transform_to_db_column(order_column.item)[2]
+            if order_column.direction == "desc":
+                _orders.append(col.desc())
+        _query = _query.order_by(*_orders)
+        return _query
+
     def generate_get_query(self, configuration: QueryConfiguration, db: Session):
         _query = db
         _query = self._gets_to_query(_query, configuration.gets)
         _query = self._groups_to_query(_query, configuration.groups)
         _query = self._filter_to_query(_query, configuration.filters)
+        _query = self._order_by_to_query(_query, configuration.orders)
+        if configuration.limit:
+            _query = _query.limit(configuration.limit)
+        print(_query)
         return _query
 
     def get_query_result(self, query: Query):

@@ -20,7 +20,6 @@ export default class Genres extends React.Component {
 
     deleteGenre = (event) => {
         event.preventDefault()
-        console.log(event.target.dataset.genre_id)
         const deleteHandler = fetch(`${backend_url}/api/genres/${event.target.dataset.genre_id}`,
             {
                 method: 'DELETE'
@@ -72,18 +71,20 @@ class Genre extends React.Component {
 
 
     handleSubmit = (value) => {
-        const editHandler = fetch(`${backend_url}/api/genre/${this.state.id}`,
+        const editHandler = fetch(`${backend_url}/api/genres/${this.state.id}`,
             {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    id: this.state.id,
                     ...value
                 })
             })
         editHandler.then(res => res.json()).then(data => {
             this.setState(data)
+            this.toggleEditView()
         })
     }
 

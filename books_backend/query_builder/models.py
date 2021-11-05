@@ -72,19 +72,30 @@ class FilterItem(PropertyBaseModel):
         return OPERATIONS[operation](_filters)
 
 
+class OrderItem(PropertyBaseModel):
+    item: Column
+    direction: str = "asc"
+
+
 class QueryConfiguration(PropertyBaseModel):
     gets: List[Column]
     filters: Optional[FilterItem]
     groups: Optional[List[Column]]
+    limit: Optional[int]
+    orders: Optional[List[OrderItem]]
 
 
 class DisplayConfiguration(PropertyBaseModel):
     title: str
     type: str
     description: Optional[str]
+    xAxis: Optional[str]
+    yAxis: Optional[str]
+    yAxisLabel: Optional[str]
+    item: Optional[str]
 
 
 class StatItem(PropertyBaseModel):
-    id: int
+    id: str
     query_configuration: QueryConfiguration
     display_configuration: Optional[DisplayConfiguration]

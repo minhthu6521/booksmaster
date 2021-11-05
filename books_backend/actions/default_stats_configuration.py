@@ -23,10 +23,14 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
                     "label": "Average book length"
                 }
             ]
+        },
+        "display_configuration": {
+            "title": "Average number of words per book",
+            "type": "text"
         }
     },
     {
-        "id": "default1",
+        "id": "default2",
         "query_configuration": {
             "gets": [
                 {
@@ -40,14 +44,15 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
                 }
             ],
             "filters": {
-                "items": [{
-                    "item": {
-                        "name": "genre.name",
-                        "label": "Genre"
+                "items": [
+                    {
+                        "item": {
+                            "name": "genre.name",
+                            "label": "Genre"
+                        },
+                        "clause": "not equal",
+                        "value": "(empty)"
                     },
-                    "clause": "not equal",
-                    "value": "(empty)"
-                }
                 ],
                 "operation": "and"
 
@@ -56,7 +61,24 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
                 {
                     "name": "genre.name"
                 }
+            ],
+            "limit": 10,
+            "orders": [
+                {
+                    "item": {
+                        "name": "books.id",
+                        "operation": ["count"]
+                    },
+                    "direction": "desc"
+                }
             ]
+        },
+        "display_configuration": {
+            "title": "Average number of words per book per genre",
+            "type": "bar_chart",
+            "xAxis": "genre",
+            "yAxisLabel": "Average book length",
+            "yAxis": "average_book_length"
         }
     }
 ]
