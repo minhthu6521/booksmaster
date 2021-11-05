@@ -1,53 +1,70 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
 #BarChart {
-  display: flex;
-  flex-direction: row; /* Arrange the Bars Horizontally using FlexBox  */
-  align-items: flex-end; /* Have the bars start at the bottom and go up */
-  justify-content: center; /* Center the bars in the middle of the screen */
-  margin: 50px;
+    display: flex;
+    flex-direction: row; /* Arrange the Bars Horizontally using FlexBox  */
+    align-items: flex-end; /* Have the bars start at the bottom and go up */
+    justify-content: center; /* Center the bars in the middle of the screen */
+    margin: 50px;
 }
 
 .bar {
-  background-color: #3aa70f; /* Have each bar be a nice green */
-  width: 10px; /* The animation will start with each bar being 10px wide, and then expand outwards */
+    background-color: #3aa70f; /* Have each bar be a nice green */
+    width: 10px; /* The animation will start with each bar being 10px wide, and then expand outwards */
 }
 
+.statBoard {
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 80%;
+}
+
+.statBoard .statItem {
+    padding: 10px 30px;
+    margin: 10px;
+    box-shadow: 0 0 1px 1px #dedede;
+    height: 100%
+}
+
+
+.statBoard .statItem:has(p) {
+    height: 20px;
+}

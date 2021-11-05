@@ -36,7 +36,7 @@ class Statistics extends React.Component {
             items.push(<StatItem key={item.id} {...item}/>)
         }
         return (
-            <div>{items}</div>
+            <div className="statBoard">{items}</div>
         )
     }
 
@@ -68,9 +68,9 @@ class StatItem extends React.Component {
     render() {
         const Item = components[this.props.display_configuration.type];
         return (
-            <div>
+            <div className="statItem">
                 <h3>{this.props.display_configuration.title}</h3>
-                {this.state.data ? <Item className="statItem" data={this.state.data} {...this.props}/> : <div></div>}
+                {this.state.data ? <Item data={this.state.data} {...this.props}/> : <div></div>}
             </div>
         )
     }
@@ -94,9 +94,8 @@ function BarChartHandler(props) {
             y: d => d[yAxis],
             xDomain: d3.groupSort(data, ([d]) => -d[yAxis], d => d[xAxis]),
             yLabel: props.display_configuration.yAxisLabel,
-            height: 500,
-            width: 1000,
-            color: "steelblue"
+            color: "steelblue",
+            width: props.display_configuration.width
         })
         svg.current.appendChild(chart)
     }, [])
@@ -109,14 +108,12 @@ function BarChartHandler(props) {
 function PieChartHandler(props) {
     const svg = useRef(null);
     useEffect(() => {
-        console.log(props);
         let data = props.data;
         let name = props.display_configuration.name,
             value = props.display_configuration.value;
         let chart = PieChart(data, {
             name: d => d[name],
-            value: d => d[value],
-            height: 500
+            value: d => d[value]
         })
         svg.current.appendChild(chart)
     }, [])
@@ -131,8 +128,6 @@ function HistogramHandler(props) {
         let data = props.data;
         let chart = Histogram(data, {
             value: d => d.value,
-            width: 600,
-            height: 500,
             color: "steelblue",
             label: "Number of times repeated →"
         })
