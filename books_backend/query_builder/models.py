@@ -93,6 +93,10 @@ class DisplayConfiguration(PropertyBaseModel):
     yAxis: Optional[str]
     yAxisLabel: Optional[str]
     item: Optional[str]
+    name: Optional[str]
+    value: Optional[str]
+    width: Optional[str]
+    height: Optional[str]
 
 
 class StatItem(PropertyBaseModel):

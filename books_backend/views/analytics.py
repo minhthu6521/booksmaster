@@ -27,7 +27,12 @@ def query_stats(config: QueryConfiguration, db: Session = Depends(get_db)):
 
 @app.get("/api/statistics/configuration", response_model=List[StatItem])
 def get_main_statistics_page_configuration(db: Session = Depends(get_db)):
+    order = ["count_book_num", "average_num_words_per_text",
+             "number_of_author_text", "number_of_genre_text",
+             "most_read_genres", "count_book_language",
+             "average_num_words_per_genre"]  # TODO :remove- this is for easier testing
     config = deepcopy(DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION)
+    config = sorted(config, key=lambda x: order.index(x["id"]))
     result = []
     for item in config:
         result.append(StatItem.parse_obj(item))
