@@ -110,6 +110,18 @@ def delete_books():
         session.commit()
 
 
+def delete_book(book_id):
+    with Session(engine) as session:
+        session.expire_on_commit = False
+        book = session.query(BookORM).get(book_id)
+        res = es.search(index="books", query={"constant_score": {"filter": {"term": {"external_id": book.id}}}})
+        for hit in res['hits']['hits']:
+            es_id = (hit["_id"])
+        es.delete(index="books", id=es_id)
+        session.delete(book)
+        session.commit()
+
+
 if __name__ == '__main__':
     path = sys.argv[1]
     delete_books()

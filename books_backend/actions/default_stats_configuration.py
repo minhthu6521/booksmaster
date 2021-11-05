@@ -28,21 +28,51 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
         }
     },
     {
-        "id": "number_of_genre_text",
+        "id": "completion_percentage",
         "query_configuration": {
             "gets": [{
-                "name": "genre.id",
+                "name": "books.id",
                 "operation": ["count"],
-                "label": "Number of genres"
-            }]
+                "label": "Number of completion books"
+            }],
+            "filters": {
+                "items": [
+                    {
+                        "literal": "BookORM.ratings.any()"
+                    },
+                ],
+                "operation": "and"
+            }
+
         },
         "display_configuration": {
-            "title": "Number of genres",
+            "title": "Number of completed books",
+            "type": "percentage"
+        }
+    },
+    {
+        "id": "average_rating_text",
+        "query_configuration": {
+            "gets": [
+                {
+                    "name": "books.id",
+                    "operation": ["count"],
+                    "label": "Number of completed books"
+                },
+                {
+                    "name": "rating.score",
+                    "operation": ["avg"],
+                    "label": "Average rating"
+                }
+            ]
+        },
+        "display_configuration": {
+            "title": "Average rating",
             "type": "text"
         }
     },
     {
-        "id": "most_read_genres",
+        "id": "number_of_books_per_genre",
         "query_configuration": {
             "gets": [
                 {
@@ -82,11 +112,10 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
                     },
                 ],
                 "operation": "and"
-
             }
         },
         "display_configuration": {
-            "title": "Most read genres",
+            "title": "Number of books per genre",
             "type": "pie_chart",
             "name": "genre",
             "value": "number_of_books"
@@ -94,44 +123,125 @@ DEFAULT_MAIN_STATISTICS_PAGE_CONFIGURATION = [
 
     },
     {
-        "id": "count_book_language",
+        "id": "most_read_genre",
         "query_configuration": {
             "gets": [
                 {
                     "name": "books.id",
                     "operation": ["count"],
-                    "label": "Number of books"
+                    "label": "Number of completed books"
                 },
                 {
-                    "name": "books.language",
-                    "label": "Language"
+                    "name": "rating.score",
+                    "operation": ["avg"],
+                    "label": "Average rating"
+                },
+                {
+                    "name": "genre.name",
+                    "label": "Genre"
                 }
             ],
             "groups": [
                 {
-                    "name": "books.language"
+                    "name": "genre.name",
+                    "label": "Genre"
                 }
             ],
+            "orders": [
+                {
+                    "item": {
+                        "name": "books.id",
+                        "operation": ["count"]
+                    },
+                    "direction": "desc"
+                }
+            ],
+            "limit": 10,
             "filters": {
                 "items": [
                     {
                         "item": {
-                            "name": "books.language",
-                            "label": "Language"
+                            "name": "genre.name",
+                            "label": "Genre"
                         },
                         "clause": "not equal",
                         "value": "(empty)"
                     },
+                    {
+                        "literal": "BookORM.ratings.any()"
+                    }
                 ],
                 "operation": "and"
-
             }
         },
         "display_configuration": {
-            "title": "Number of books by language",
+            "title": "Number of completed books per genre",
             "type": "pie_chart",
-            "name": "language",
-            "value": "number_of_books"
+            "name": "genre",
+            "value": "number_of_completed_books"
+        }
+
+    },
+    {
+        "id": "average_rating_per_genre",
+        "query_configuration": {
+            "gets": [
+                {
+                    "name": "books.id",
+                    "operation": ["count"],
+                    "label": "Number of completed books"
+                },
+                {
+                    "name": "rating.score",
+                    "operation": ["avg"],
+                    "label": "Average rating"
+                },
+                {
+                    "name": "genre.name",
+                    "label": "Genre"
+                }
+            ],
+            "groups": [
+                {
+                    "name": "genre.name",
+                    "label": "Genre"
+                }
+            ],
+            "orders": [
+                {
+                    "item": {
+                        "name": "books.id",
+                        "operation": ["count"]
+                    },
+                    "direction": "desc"
+                }
+            ],
+            "limit": 10,
+            "filters": {
+                "items": [
+                    {
+                        "item": {
+                            "name": "genre.name",
+                            "label": "Genre"
+                        },
+                        "clause": "not equal",
+                        "value": "(empty)"
+                    },
+                    {
+                        "literal": "BookORM.ratings.any()"
+                    }
+                ],
+                "operation": "and"
+            }
+        },
+        "display_configuration": {
+            "title": "Average rating per genre",
+            "type": "bar_chart",
+            "xAxis": "genre",
+            "yAxisLabel": "Average rating",
+            "yAxis": "average_rating",
+            "width": "1100",
+            "height": "500"
         }
 
     },

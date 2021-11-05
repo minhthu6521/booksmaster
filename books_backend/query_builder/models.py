@@ -58,6 +58,13 @@ class FilterSubItem(PropertyBaseModel):
         return CLAUSES[self.clause](column, value)
 
 
+class FilterLiteralItem(PropertyBaseModel):
+    literal: str
+
+    def parse_to_sqlalchemy(self, get_col_func):
+        return self.literal
+
+
 class FilterItem(PropertyBaseModel):
     items: List[dict]
     operation: str
@@ -66,7 +73,13 @@ class FilterItem(PropertyBaseModel):
         operation = self.operation
         _filters = []
         for item in self.items:
-            item_cls = FilterItem.parse_obj(item) if item.get("operation") else FilterSubItem.parse_obj(item)
+            if item.get("operation"):
+                item_cls = FilterItem
+            elif item.get("literal"):
+                item_cls = FilterLiteralItem
+            else:
+                item_cls = FilterSubItem
+            item_cls = item_cls.parse_obj(item)
             _query_filter = item_cls.parse_to_sqlalchemy(get_col_func)
             _filters.append(_query_filter)
         return OPERATIONS[operation](_filters)

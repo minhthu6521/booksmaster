@@ -44,8 +44,8 @@ CLAUSES = {
 }
 
 OPERATIONS = {
-    AND: lambda clause: f"and_({str(*clause)})",
-    OR: lambda clause: f"or_({str(*clause)})"
+    AND: lambda clause: f"and_({','.join([str(c) if not isinstance(c, str) else c for c in clause])})",
+    OR: lambda clause: f"or_({','.join([str(c) if not isinstance(c, str) else c for c in clause])})"
 }
 
 VALUES = {

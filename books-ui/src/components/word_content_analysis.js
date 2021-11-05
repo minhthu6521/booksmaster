@@ -71,9 +71,13 @@ export default class ContentAnalysis extends React.Component {
                 {this.state.showWordsForSelection ? (
                     <div>{words_to_select}</div>
                 ) : (<div></div>)}
-                <div style={{height: 600, width: 600}}><ReactWordcloud words={words_to_show}
-                                                                       options={this.state.options}/>
-                    <HistogramHandler data={words_to_show}/></div>
+                <div style={{display: "inline-flex", flex: "wrap"}}>
+                    <ReactWordcloud
+                        style={{height: 600, width: 600}}
+                        words={words_to_show}
+                        options={this.state.options}/>
+                    <HistogramHandler data={words_to_show} display_configuration={{width: 600, height:600}}/>
+                </div>
             </div>)
         }
         return (<div></div>)

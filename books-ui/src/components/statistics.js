@@ -11,7 +11,8 @@ const components = {
     histogram: Histogram,
     area_chart: AreaChart,
     pie_chart: PieChartHandler,
-    text: TextItem
+    text: TextItem,
+    percentage: PercentageItem
 }
 
 class Statistics extends React.Component {
@@ -77,11 +78,35 @@ class StatItem extends React.Component {
 }
 
 function TextItem(props) {
-    const key = props.display_configuration.item ? props.display_configuration.item : props.query_configuration.gets[0].label.replace(/\s+/g, '_').toLowerCase();
+    const key = props.display_configuration.item ? props.display_configuration.item : props.query_configuration.gets[0].label.replace(/\s+/g, '_').toLowerCase(),
+        value = props.data[0][key];
     return (
-        <p>{props.data[0][key]}</p>
+        <p>{isNaN(value) ? value : Math.round(value)}</p>
     )
 }
+
+
+function PercentageItem(props) {
+    const key = props.display_configuration.item ? props.display_configuration.item : props.query_configuration.gets[0].label.replace(/\s+/g, '_').toLowerCase();
+    let dividend_value_conf = props.query_configuration;
+    dividend_value_conf.filters = null
+    useEffect(() => {
+        const getDataTotal = fetch(`${backend_url}/api/statistics/query`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dividend_value_conf)
+        });
+        getDataTotal.then(res => res.json()).then(dataTotal => {
+            document.getElementById(`percentage_${props.id}`).innerText = `${Math.round(props.data[0][key] / dataTotal[0][key] * 100)}%`
+        })
+    }, [])
+    return (
+        <p>{props.data[0][key]} (<span id={`percentage_${props.id}`}></span>)</p>
+    )
+}
+
 
 function BarChartHandler(props) {
     const svg = useRef(null);
@@ -129,7 +154,9 @@ function HistogramHandler(props) {
         let chart = Histogram(data, {
             value: d => d.value,
             color: "steelblue",
-            label: "Number of times repeated →"
+            label: "Number of times repeated →",
+            width: props.display_configuration.width,
+            height: props.display_configuration.height,
         })
         svg.current.appendChild(chart)
     }, [])

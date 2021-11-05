@@ -79,7 +79,7 @@ class Book extends React.Component {
                 })
             })
         editHandler.then(res => res.json()).then(data => {
-            this.setState(data)
+            this.setState({...data, isEdited: false})
         })
     }
     ratingChanged = (newRating) => {
@@ -97,13 +97,13 @@ class Book extends React.Component {
 
     render() {
         const authors = [], genres = [];
-        for (const {first_name, last_name, full_name} of this.state.authors) {
+        for (const {full_name} of this.state.authors) {
             authors.push(<p key={`author_${full_name}`}>
                 {full_name}
             </p>)
         }
         for (const {name} of this.state.genres) {
-            genres.push(<p>
+            genres.push(<p key={`genre_${name}`}>
                 {name}
             </p>)
         }
@@ -115,7 +115,7 @@ class Book extends React.Component {
                 <div>
                     <h3>{this.state.title}</h3>
                     <div dangerouslySetInnerHTML={{__html: this.state.description}} ></div>
-                    <div>Rating: {this.state.current_user_rating}<ReactStars
+                    <div>Rating:<ReactStars
                         count={5}
                         onChange={this.ratingChanged}
                         size={24}
