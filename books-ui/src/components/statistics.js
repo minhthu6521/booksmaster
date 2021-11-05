@@ -9,7 +9,7 @@ import PieChart from "./pie_chart";
 const components = {
     bar_chart: BarChartHandler,
     histogram: Histogram,
-    area_chart: AreaChart,
+    area_chart: AreaChartHandler,
     pie_chart: PieChart,
     text: TextItem
 }
@@ -88,6 +88,32 @@ function BarChartHandler(props) {
         let xAxis = props.display_configuration.xAxis,
             yAxis = props.display_configuration.yAxis;
         let chart = BarChart(data, {
+            x: d => d[xAxis],
+            y: d => d[yAxis],
+            xDomain: d3.groupSort(data, ([d]) => -d[yAxis], d => d[xAxis]),
+            yLabel: props.display_configuration.yAxisLabel,
+            height: 500,
+            width: 1000,
+            color: "steelblue"
+        })
+        svg.current.appendChild(chart)
+    }, [])
+    return (
+        <div>
+            <div ref={svg}/>
+        </div>
+    )
+}
+
+
+
+function AreaChartHandler(props) {
+    const svg = useRef(null);
+    useEffect(() => {
+        let data = props.data;
+        let xAxis = props.display_configuration.xAxis,
+            yAxis = props.display_configuration.yAxis;
+        let chart = AreaChart(data, {
             x: d => d[xAxis],
             y: d => d[yAxis],
             xDomain: d3.groupSort(data, ([d]) => -d[yAxis], d => d[xAxis]),
