@@ -1,8 +1,7 @@
 import React from "react";
-import {backend_url, content_api} from "../variables";
-import {Link, Route, Switch} from "react-router-dom";
+import {content_api} from "../variables";
 import ReactWordcloud from "react-wordcloud";
-import DataVisualization from "./data_visualization";
+import {HistogramHandler} from "./statistics";
 
 export default class ContentAnalysis extends React.Component {
     constructor(props) {
@@ -74,7 +73,7 @@ export default class ContentAnalysis extends React.Component {
                 ) : (<div></div>)}
                 <div style={{height: 600, width: 600}}><ReactWordcloud words={words_to_show}
                                                                        options={this.state.options}/>
-                    <DataVisualization dataSet={words_to_show}/></div>
+                    <HistogramHandler data={words_to_show}/></div>
             </div>)
         }
         return (<div></div>)

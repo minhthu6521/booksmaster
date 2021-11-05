@@ -4,7 +4,7 @@ import Books from './components/books.js'
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Genres from "./components/genre";
-import Statistics from "./components/statistics";
+import {Statistics} from "./components/statistics";
 
 export default class App extends React.Component {
     render() {
