@@ -124,5 +124,8 @@ def delete_book(book_id):
 
 if __name__ == '__main__':
     path = sys.argv[1]
-    delete_books()
-    add_all_books_in_dir(path, add_book)
+    metadata = path.split("/")[:-1]
+    metadata = "/".join(metadata) + "/metadata.opf"
+    #delete_books()
+    #add_all_books_in_dir(path, add_book)
+    add_book(path, metadata)

@@ -2,6 +2,7 @@ from typing import List
 from typing import Optional
 
 from pydantic import BaseModel
+from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -36,6 +37,7 @@ class BookORM(Base):
     language = Column(String(5), info={"data_type": CATEGORIZED_DATA_TYPE, "label": "Language"})
     description = Column(Text, info={"label": "Description"})
     content_length = Column(Integer)
+    is_fiction = Column(Boolean, server_default="f")
     genres = relationship(
         "GenreORM",
         secondary=book_genre_table,
@@ -52,6 +54,7 @@ class BookBase(PropertyBaseModel):
     title: str
     isbn: Optional[str] = None
     description: Optional[str] = None
+    is_fiction: bool
 
     class Config:
         orm_mode = True
@@ -79,6 +82,10 @@ class GenreBase(BaseModel):
 
 class Genre(GenreBase):
     books: List[BookBase] = []
+
+
+class GenreUpdate(PropertyBaseModel):
+    name: str
 
 
 class Book(BookBase):

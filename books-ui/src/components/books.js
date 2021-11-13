@@ -3,6 +3,7 @@ import {backend_url} from "../variables";
 import {Link, Route, Switch} from "react-router-dom";
 import ContentAnalysis from "./word_content_analysis";
 import ReactStars from "react-rating-stars-component"
+import {FaTrash} from "react-icons/fa";
 
 export default class Books extends React.Component {
     constructor(props) {
@@ -95,6 +96,16 @@ class Book extends React.Component {
         })
     }
 
+
+    deleteBook = (event) => {
+        event.preventDefault()
+        const deleteHandler = fetch(`${backend_url}/api/books/${this.state.id}`,
+            {
+                method: 'DELETE'
+            })
+        window.location.href="/books"
+    }
+
     render() {
         const authors = [], genres = [];
         for (const {full_name} of this.state.authors) {
@@ -108,6 +119,7 @@ class Book extends React.Component {
             </p>)
         }
         return <div key={this.state.id}>
+            <span><button onClick={this.deleteBook}> <FaTrash/></button></span>
             <button onClick={this.toggleEditView}>Edit metadata</button>
             {this.state.isEdited ? (
                 <BookEditForm bookId={this.state.id} item={this.state} handleSubmit={this.handleSubmit}/>
@@ -141,7 +153,8 @@ class BookEditForm extends React.Component {
         event.preventDefault()
         const data = {
             title: event.target.title.value,
-            description: event.target.description.value
+            description: event.target.description.value,
+            is_fiction: event.target.is_fiction.checked
         }
         this.props.handleSubmit(data)
     }
@@ -168,6 +181,7 @@ class BookEditForm extends React.Component {
                             ref={node => (this.inputNode = node)}
                         />
                     </label></div>
+                    <div><label>Fiction <input type="checkbox" name="is_fiction" defaultChecked={this.props.item.is_fiction}/></label></div>
                     <button type="submit">Submit</button>
                 </form>
             )

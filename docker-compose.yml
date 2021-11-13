@@ -24,7 +24,7 @@ services:
          dockerfile: Dockerfile
       container_name: database-api
       environment:
-         g: ${ELASTIC_SEARCH_URL:-books-elastics-db}
+         ELASTIC_SEARCH_URL: ${ELASTIC_SEARCH_URL:-books-elastics-db}
          ELASTIC_SEARCH_PORT: ${ELASTIC_SEARCH_PORT:-9200}
          REDIS_ENDPOINT: ${REDIS_ENDPOINT:-redis-image}
       depends_on:

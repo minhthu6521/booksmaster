@@ -7,17 +7,19 @@ from sqlalchemy.orm import Session
 
 from actions.book_actions import get_book_by_id
 from actions.genre_actions import add_genre_to_book
+from actions.genre_actions import do_update_book_genre
 from actions.genre_actions import get_genre_by_id
 from actions.genre_actions import get_or_create_genre
 from actions.genre_actions import remove_genre
 from actions.genre_actions import remove_genre_from_book
 from actions.genre_actions import update_genre_name
+from app import app
 from database import get_db
 from models.book import Book
 from models.book import Genre
 from models.book import GenreBase
 from models.book import GenreORM
-from app import app
+from models.book import GenreUpdate
 
 
 @app.get("/api/genres/{genre_id}", response_model=Genre)
@@ -57,7 +59,7 @@ def delete_genre(genre_id: int, db: Session = Depends(get_db)):
 
 
 @app.patch("/api/books/{book_id}/genres/{genre_name}", response_model=Book)
-async def update_book_genre(book_id: int, genre_name: str, db: Session = Depends(get_db)):
+async def add_book_genre(book_id: int, genre_name: str, db: Session = Depends(get_db)):
     book = get_book_by_id(book_id, db)
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -74,5 +76,15 @@ async def delete_book_genre(book_id: int, genre_name: str, db: Session = Depends
         raise HTTPException(status_code=404, detail="Book not found")
     genre = get_or_create_genre(db, genre_name)
     remove_genre_from_book(db, genre, book)
+    db.commit()
+    return book
+
+
+@app.patch("/api/books/{book_id}/genres", response_model=Book)
+async def update_book_genre(book_id: int, genres: List[GenreUpdate], db: Session = Depends(get_db)):
+    book = get_book_by_id(book_id, db)
+    if book is None:
+        raise HTTPException(status_code=404, detail="Book not found")
+    do_update_book_genre(db, genres, book)
     db.commit()
     return book

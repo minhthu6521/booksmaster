@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from actions.book_actions import get_book_by_id
+from actions.book_actions import remove_book
 from actions.book_actions import update_book_metadata
 from actions.rating_actions import update_user_rating
 from app import app
@@ -52,3 +53,13 @@ async def patch_user_rating(book_id: int, score: float, db: Session = Depends(ge
     book = update_user_rating(db, book, user, score)
     db.commit()
     return book
+
+
+@app.delete("/api/books/{book_id}", response_model=Book)
+async def delete_book(book_id: int, db: Session = Depends(get_db)):
+    book = get_book_by_id(book_id, db)
+    if book is None:
+        raise HTTPException(status_code=404, detail="Book not found")
+    remove_book(book, db)
+    db.commit()
+    return

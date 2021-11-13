@@ -15,4 +15,10 @@ def update_book_metadata(book: BookORM, json_data: BookBase):
     book.title = json_data.title or book.title
     book.isbn = json_data.isbn or book.isbn
     book.description = json_data.description or book.description
+    book.is_fiction = json_data.is_fiction or book.is_fiction
     return book
+
+
+def remove_book(book: BookORM, db: Session):
+    db.delete(book)
+    db.flush()
