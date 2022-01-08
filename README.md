@@ -1,3 +1,5 @@
+This project is for collecting all the epubs books that I currently have and do a small statistics to analyze my reading pattern 
+
 ## Prerequisites
 - Docker & docker-compose
 - Python 3.8
